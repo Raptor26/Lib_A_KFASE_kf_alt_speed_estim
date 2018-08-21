@@ -41,16 +41,16 @@ enum
 /*#### |Begin| --> Секция - "Определение типов" ##############################*/
 typedef struct
 {
-	float estimates_a[2];
+	float states_x_a[2];
 
 	float dT;
 
-	float Q_acc[2][2],
-	R_alt[2][2];
+	float accCovarianse_Q_a2[2][2],
+	baroCovarianse_R_a2[2][2];
 
-	float P[2][2];
+	float covarianse_P_a[2][2];
 
-	float K[2];
+	float kalmanGain_K_a[2];
 }kfase_alt_speed_estimate_s;
 /*#### |End  | <-- Секция - "Определение типов" ##############################*/
 
