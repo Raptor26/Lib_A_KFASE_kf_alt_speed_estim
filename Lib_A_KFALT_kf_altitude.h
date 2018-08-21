@@ -24,10 +24,34 @@
 
 
 /*#### |Begin| --> Секция - "Определение констант" ###########################*/
+enum
+{
+	KFASE_KALMAN_GAIN_ALT = 0,
+	KFASE_KALMAN_GAIN_SPEED,
+};
+
+enum
+{
+	KFASE_ESTIMATE_ALT = 0,
+	KFASE_ESTIMATE_SPEED,
+};
 /*#### |End  | <-- Секция - "Определение констант" ###########################*/
 
 
 /*#### |Begin| --> Секция - "Определение типов" ##############################*/
+typedef struct
+{
+	float estimates_a[2];
+
+	float dT;
+
+	float Q_acc[2][2],
+	R_alt[2][2];
+
+	float P[2][2];
+
+	float K[2];
+}kfase_alt_speed_estimate_s;
 /*#### |End  | <-- Секция - "Определение типов" ##############################*/
 
 
@@ -36,6 +60,30 @@
 
 
 /*#### |Begin| --> Секция - "Прототипы глобальных функций" ###################*/
+
+extern void
+KFASE_GetPredict (
+	kfase_alt_speed_estimate_s *p_s,
+	float accWorldFrame,
+	float dt);
+
+extern void
+KFASE_HalfCovarUpdate (
+	kfase_alt_speed_estimate_s *p_s,
+	float dt);
+
+extern void
+KFASE_CalcKalmanGain (
+	kfase_alt_speed_estimate_s *p_s);
+
+extern void
+KFASE_UpdateEstimate (
+	kfase_alt_speed_estimate_s *p_s,
+	float altBaro);
+
+extern void
+KFASE_FullCovarUpdate (
+	kfase_alt_speed_estimate_s *p_s);
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
 
 
