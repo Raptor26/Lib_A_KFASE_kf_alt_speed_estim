@@ -41,6 +41,7 @@ KFASE_GetPredict (
 		+ p_s->states_x_a[KFASE_ESTIMATE_SPEED] * dt
 		+ p_s->states_x_a[KFASE_ESTIMATE_ALT];
 
+	/* Частичное обновление матрицы ковариаций */
 	KFASE_HalfCovarUpdate(
 			p_s,
 			dt);
