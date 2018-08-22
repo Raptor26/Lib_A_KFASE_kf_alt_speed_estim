@@ -12,6 +12,7 @@
 !*.md
 !*.pdf
 !*.mcdx
+!*.m
 
 !.gitignore
 
