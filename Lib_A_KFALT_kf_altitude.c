@@ -151,6 +151,8 @@ void
 KFASE_FullCovarUpdate (
 	kfase_alt_speed_estimate_s *p_s)
 {
+	/* TODO избавиться от временных переменных матрицы ковариаций
+	 * (после того как будет проверена работоспособность фильтра) */
 	/* Временная переменная для матрицы ковариаций */
 	float P_temp[2][2] =
 	{
@@ -158,19 +160,17 @@ KFASE_FullCovarUpdate (
 		{p_s->covarianse_P_a[1][0], p_s->covarianse_P_a[1][1]}
 	};
 
-	p_s->covarianse_P_a[0][0] =
-		-(P_temp[0][0] * (p_s->kalmanGain_K_a[KFASE_KALMAN_GAIN_ALT] - 1.0f));
+	p_s->covarianse_P_a[0][0] -=
+		(P_temp[0][0] * (p_s->kalmanGain_K_a[KFASE_KALMAN_GAIN_ALT]));
 
-	p_s->covarianse_P_a[0][1] =
-		-(P_temp[0][1] * (p_s->kalmanGain_K_a[KFASE_KALMAN_GAIN_ALT] - 1.0f));
+	p_s->covarianse_P_a[0][1] -=
+		(P_temp[0][1] * (p_s->kalmanGain_K_a[KFASE_KALMAN_GAIN_ALT]));
 
-	p_s->covarianse_P_a[1][0] =
-		P_temp[1][0]
-		- (p_s->kalmanGain_K_a[KFASE_KALMAN_GAIN_SPEED] * P_temp[0][0]);
+	p_s->covarianse_P_a[1][0] -=
+		P_temp[0][0] * p_s->kalmanGain_K_a[KFASE_KALMAN_GAIN_SPEED];
 
-	p_s->covarianse_P_a[1][1] =
-		P_temp[1][1]
-		- (p_s->kalmanGain_K_a[KFASE_KALMAN_GAIN_SPEED] * P_temp[0][1]);
+	p_s->covarianse_P_a[1][1] -=
+		P_temp[0][1] * p_s->kalmanGain_K_a[KFASE_KALMAN_GAIN_SPEED];
 }
 /*#### |End  | <-- Секция - "Описание глобальных функций" ####################*/
 
