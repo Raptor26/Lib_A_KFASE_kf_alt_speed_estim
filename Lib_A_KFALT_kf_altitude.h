@@ -79,7 +79,8 @@ KFASE_HalfCovarUpdate (
 
 extern void
 KFASE_CalcKalmanGain (
-	kfase_alt_speed_estimate_s *p_s);
+	kfase_alt_speed_estimate_s *p_s,
+	float dt);
 
 extern void
 KFASE_UpdateEstimate (

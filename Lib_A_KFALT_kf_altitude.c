@@ -30,7 +30,7 @@ KFASE_InitMatrixCovarianseP (
 	kfase_alt_speed_estimate_s *p_s,
 	float eye)
 {
-	/* Инициализация матрицы ковариаций как диоганальную */
+	/* Инициализация матрицы ковариаций как диагональную */
 	p_s->covarianse_P_a[0][0] = eye;
 	p_s->covarianse_P_a[0][1] = 0.0f;
 	p_s->covarianse_P_a[1][0] = 0.0f;
@@ -75,7 +75,9 @@ KFASE_GetPredictWithCorrect (
 		dt);
 
 	/* Обновление коэффициентов усиления фильтра Калмана */
-	KFASE_CalcKalmanGain(p_s);
+	KFASE_CalcKalmanGain(
+		p_s,
+		dt);
 
 	/* Обновление оценки с помощью измерений */
 	KFASE_UpdateEstimate(
