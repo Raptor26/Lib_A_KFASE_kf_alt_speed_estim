@@ -44,15 +44,15 @@ KFASE_GetPredict (
 	float accWorldFrame,
 	float dt)
 {
-	/* Обновление оценки скорости */
-	p_s->states_x_a[KFASE_ESTIMATE_SPEED] =
-		p_s->states_x_a[KFASE_ESTIMATE_SPEED] + accWorldFrame * dt;
-
 	/* Обновление оценки высоты */
 	p_s->states_x_a[KFASE_ESTIMATE_ALT] =
 		((accWorldFrame * dt * dt) * 0.5f)
 		+ p_s->states_x_a[KFASE_ESTIMATE_SPEED] * dt
 		+ p_s->states_x_a[KFASE_ESTIMATE_ALT];
+
+	/* Обновление оценки скорости */
+	p_s->states_x_a[KFASE_ESTIMATE_SPEED] =
+		p_s->states_x_a[KFASE_ESTIMATE_SPEED] + accWorldFrame * dt;
 
 	/* Частичное обновление матрицы ковариаций */
 	KFASE_HalfCovarUpdate(
@@ -127,6 +127,7 @@ KFASE_CalcKalmanGain (
 {
 	p_s->kalmanGain_K_a[KFASE_KALMAN_GAIN_ALT] =
 		(p_s->covarianse_P_a[0][0] + p_s->covarianse_P_a[1][0] * dt) / p_s->covarianse_P_a[0][0];
+//		+ 1.0f;
 
 	p_s->kalmanGain_K_a[KFASE_KALMAN_GAIN_SPEED] =
 		p_s->covarianse_P_a[1][0] / p_s->covarianse_P_a[0][0];
