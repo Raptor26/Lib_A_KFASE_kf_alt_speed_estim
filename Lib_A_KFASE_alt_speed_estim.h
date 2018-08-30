@@ -65,11 +65,33 @@ KFASE_InitMatrixCovarianseP (
 	kfase_alt_speed_estimate_s *p_s,
 	float eye);
 
+extern void
+KFASE_InitMatrixCovarianseQ(
+	kfase_alt_speed_estimate_s *p_s,
+	float eye);
+
+extern void
+KFASE_InitMatrixCovarianseR(
+	kfase_alt_speed_estimate_s *p_s,
+	float eye);
+
+extern void
+KFASE_InitStates(
+	kfase_alt_speed_estimate_s *p_s,
+	float alt,
+	float speed);
 
 extern void
 KFASE_GetPredict (
 	kfase_alt_speed_estimate_s *p_s,
 	float accWorldFrame,
+	float dt);
+
+extern void
+KFASE_GetPredictWithCorrect (
+	kfase_alt_speed_estimate_s *p_s,
+	float accWorldFrame,
+	float altBaro,
 	float dt);
 
 extern void

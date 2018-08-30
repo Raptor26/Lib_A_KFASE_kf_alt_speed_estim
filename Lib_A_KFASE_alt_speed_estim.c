@@ -37,6 +37,30 @@ KFASE_InitMatrixCovarianseP (
 	p_s->covarianse_P_a[1][1] = eye;
 }
 
+void
+KFASE_InitMatrixCovarianseQ(
+	kfase_alt_speed_estimate_s *p_s,
+	float eye)
+{
+
+}
+
+void
+KFASE_InitMatrixCovarianseR(
+	kfase_alt_speed_estimate_s *p_s,
+	float eye)
+{
+
+}
+
+void
+KFASE_InitStates(
+	kfase_alt_speed_estimate_s *p_s,
+	float alt,
+	float speed)
+{
+
+}
 
 void
 KFASE_GetPredict (
