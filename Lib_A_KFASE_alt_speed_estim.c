@@ -8,7 +8,7 @@
 
 
 /*#### |Begin| --> Секция - "Include" ########################################*/
-#include "Lib_A_KFALT_kf_altitude.h"
+#include "Lib_A_KFASE_alt_speed_estim.h"
 /*#### |End  | <-- Секция - "Include" ########################################*/
 
 

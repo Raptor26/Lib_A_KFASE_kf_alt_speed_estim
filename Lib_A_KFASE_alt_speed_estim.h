@@ -7,8 +7,8 @@
  */
 
 
-#ifndef LIB_A_KFALT_KF_ALTITUDE_H_
-#define LIB_A_KFALT_KF_ALTITUDE_H_
+#ifndef LIB_A_KFASE_KF_ALT_SPEED_ESTIM_H_
+#define LIB_A_KFASE_KF_ALT_SPEED_ESTIM_H_
 
 
 /*#### |Begin| --> Секция - "Include" ########################################*/
