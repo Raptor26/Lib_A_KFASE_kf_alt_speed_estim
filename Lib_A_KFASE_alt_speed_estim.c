@@ -67,6 +67,20 @@ KFASE_FullCovarUpdate (
 
 
 /*#### |Begin| --> Секция - "Описание глобальных функций" ####################*/
+
+/**
+ * @brief	Функция выполняет инициализацию фильтра Калмана
+ * @details	Функция инициализирует все необходимые параметры для начала 
+ *          работы фильтра Калмана
+ * @param[in]	*p_s:	Указатель на структуру, содержащую необходимые данные 
+ * 						для работы фильтра Калмана
+ * @param[in]	acc_Q_Noise:	Шумовая характеристика акселерометра
+ * @param[in]	baro_R_Noise:	Шумовая характеристика барометра
+ * @param[in]	alt:	Начальное значение высоты
+ * @param[in]	speed:	Начальное значение вертикальной скорости
+ * @param[in]	dT:	Период интегрирования (в секундах) показаний акселерометра
+ * @return	None
+ */
 void
 KFASE_Init_KF(
 	kfase_alt_speed_estimate_s *p_s,
@@ -103,6 +117,12 @@ KFASE_Init_KF(
 	p_s->dTdT = dT * dT;
 }
 
+/**
+ * @brief	Функция возвращает оцененную фильтром Калмана высоту
+ * @param[in]	p_s:	Указатель на структуру, содержащую необходимые данные 
+ * 						для работы фильтра Калмана
+ * @return	Оцененная фильтром Калмана высота
+ */
 float
 KFASE_GetAltEstimate(
 	kfase_alt_speed_estimate_s *p_s)
@@ -110,6 +130,12 @@ KFASE_GetAltEstimate(
 	return (p_s->states_x_a[KFASE_ESTIMATE_ALT]);
 }
 
+/**
+ * @brief	Функция возвращает оцененную фильтром Калмана вертикальную скорость
+ * @param[in]	p_s:	Указатель на структуру, содержащую необходимые данные 
+ * 						для работы фильтра Калмана
+ * @return	Оцененная фильтром Калмана вертикальная скорость
+ */
 float
 KFASE_GetVerticalSpeedEstimate(
 	kfase_alt_speed_estimate_s *p_s)
@@ -117,6 +143,16 @@ KFASE_GetVerticalSpeedEstimate(
 	return (p_s->states_x_a[KFASE_ESTIMATE_SPEED]);
 }
 
+/**
+ * @brief	Функция выполняет обновление оценки высоты и вертикальной 
+ *        	скорости с помощью фильтра Калмана
+ * @param[in]	p_s:	Указатель на структуру, содержащую необходимые данные 
+ * 						для работы фильтра Калмана
+ * @param[in]	accWorldFrame:	Показания акселерометра в опорной системе 
+ * 								координат вдоль вертикальной оси
+ * @param[in]	altBaro:	Показания барометрического датчика
+ * @return	None
+ */
 void
 KFASE_GetPredictWithCorrect (
 	kfase_alt_speed_estimate_s *p_s,
@@ -142,13 +178,10 @@ KFASE_GetPredictWithCorrect (
 	KFASE_FullCovarUpdate(
 		p_s);
 }
-
-
 /*#### |End  | <-- Секция - "Описание глобальных функций" ####################*/
 
 
 /*#### |Begin| --> Секция - "Описание локальных функций" #####################*/
-
 void
 KFASE_InitMatrixCovarianseP (
 	kfase_alt_speed_estimate_s *p_s,
