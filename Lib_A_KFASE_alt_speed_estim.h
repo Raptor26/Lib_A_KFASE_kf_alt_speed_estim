@@ -41,6 +41,7 @@ enum
 /*#### |Begin| --> Секция - "Определение типов" ##############################*/
 typedef struct
 {
+	/* Пространство состояний системы, а именно высота и вертикальная скорость */
 	float states_x_a[2];
 
 	float dT;
@@ -61,57 +62,29 @@ typedef struct
 
 /*#### |Begin| --> Секция - "Прототипы глобальных функций" ###################*/
 extern void
-KFASE_InitMatrixCovarianseP (
+KFASE_Init_KF(
 	kfase_alt_speed_estimate_s *p_s,
-	float eye);
-
-extern void
-KFASE_InitMatrixCovarianseQ(
-	kfase_alt_speed_estimate_s *p_s,
-	float eye);
-
-extern void
-KFASE_InitMatrixCovarianseR(
-	kfase_alt_speed_estimate_s *p_s,
-	float eye);
-
-extern void
-KFASE_InitStates(
-	kfase_alt_speed_estimate_s *p_s,
+	float acc_Q_Noise,
+	float baro_R_Noise,
+	float covar_P_Noise,
 	float alt,
 	float speed);
 
-extern void
-KFASE_GetPredict (
-	kfase_alt_speed_estimate_s *p_s,
-	float accWorldFrame,
-	float dt);
+extern float
+KFASE_GetAltEstimate(
+	kfase_alt_speed_estimate_s *p_s);
+
+extern float
+KFASE_GetVerticalSpeedEstimate(
+	kfase_alt_speed_estimate_s *p_s);
 
 extern void
-KFASE_GetPredictWithCorrect (
+KFASE_GetPredictWithCorrect(
 	kfase_alt_speed_estimate_s *p_s,
 	float accWorldFrame,
 	float altBaro,
 	float dt);
 
-extern void
-KFASE_HalfCovarUpdate (
-	kfase_alt_speed_estimate_s *p_s,
-	float dt);
-
-extern void
-KFASE_CalcKalmanGain (
-	kfase_alt_speed_estimate_s *p_s,
-	float dt);
-
-extern void
-KFASE_UpdateEstimate (
-	kfase_alt_speed_estimate_s *p_s,
-	float altBaro);
-
-extern void
-KFASE_FullCovarUpdate (
-	kfase_alt_speed_estimate_s *p_s);
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
 
 
