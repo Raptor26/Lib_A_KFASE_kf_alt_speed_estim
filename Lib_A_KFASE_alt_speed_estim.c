@@ -42,7 +42,11 @@ KFASE_InitMatrixCovarianseQ(
 	kfase_alt_speed_estimate_s *p_s,
 	float eye)
 {
-
+	/* Инициализация матрицы ковариаций как диагональную */
+	p_s->covarianse_Q_a[0][0] = eye;
+	p_s->covarianse_Q_a[0][1] = 0.0f;
+	p_s->covarianse_Q_a[1][0] = 0.0f;
+	p_s->covarianse_Q_a[1][1] = eye;
 }
 
 void
@@ -50,7 +54,11 @@ KFASE_InitMatrixCovarianseR(
 	kfase_alt_speed_estimate_s *p_s,
 	float eye)
 {
-
+	/* Инициализация матрицы ковариаций как диагональную */
+	p_s->covarianse_R_a[0][0] = eye;
+	p_s->covarianse_Q_a[0][1] = 0.0f;
+	p_s->covarianse_Q_a[1][0] = 0.0f;
+	p_s->covarianse_Q_a[1][1] = eye;
 }
 
 void
@@ -59,7 +67,8 @@ KFASE_InitStates(
 	float alt,
 	float speed)
 {
-
+	p_s->states_x_a[KFASE_ESTIMATE_ALT] 	= alt;
+	p_s->states_x_a[KFASE_ESTIMATE_SPEED] 	= speed;
 }
 
 void
