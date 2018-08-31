@@ -44,7 +44,11 @@ typedef struct
 	/* Пространство состояний системы, а именно высота и вертикальная скорость */
 	float states_x_a[2];
 
+	/* Период интегрирования показаний акселерометра (сек) */
 	float dT;
+
+	/* Квадрат периода интегрирования показаний акселерометра (сек) */
+	float dTdT;
 
 	float accCovarianse_Q_a2[2][2],
 		  baroCovarianse_R_a2[2][2];
@@ -68,7 +72,14 @@ KFASE_Init_KF(
 	float baro_R_Noise,
 	float covar_P_Noise,
 	float alt,
-	float speed);
+	float speed,
+	float dT);
+
+extern void
+KFASE_GetPredictWithCorrect(
+	kfase_alt_speed_estimate_s *p_s,
+	float accWorldFrame,
+	float altBaro);
 
 extern float
 KFASE_GetAltEstimate(
@@ -77,14 +88,6 @@ KFASE_GetAltEstimate(
 extern float
 KFASE_GetVerticalSpeedEstimate(
 	kfase_alt_speed_estimate_s *p_s);
-
-extern void
-KFASE_GetPredictWithCorrect(
-	kfase_alt_speed_estimate_s *p_s,
-	float accWorldFrame,
-	float altBaro,
-	float dt);
-
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
 
 

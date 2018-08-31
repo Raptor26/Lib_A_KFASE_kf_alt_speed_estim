@@ -21,6 +21,48 @@
 
 
 /*#### |Begin| --> Секция - "Прототипы локальных функций" ####################*/
+static void
+KFASE_InitMatrixCovarianseP (
+	kfase_alt_speed_estimate_s *p_s,
+	float eye);
+
+static void
+KFASE_InitMatrixCovarianseQ(
+	kfase_alt_speed_estimate_s *p_s,
+	float eye);
+
+static void
+KFASE_InitMatrixCovarianseR(
+	kfase_alt_speed_estimate_s *p_s,
+	float eye);
+
+static void
+KFASE_InitStates(
+	kfase_alt_speed_estimate_s *p_s,
+	float alt,
+	float speed);
+
+static void
+KFASE_GetPredict (
+	kfase_alt_speed_estimate_s *p_s,
+	float accWorldFrame);
+
+static void
+KFASE_HalfCovarUpdate (
+	kfase_alt_speed_estimate_s *p_s);
+
+static void
+KFASE_CalcKalmanGain (
+	kfase_alt_speed_estimate_s *p_s);
+
+static void
+KFASE_UpdateEstimate (
+	kfase_alt_speed_estimate_s *p_s,
+	float altBaro);
+
+static void
+KFASE_FullCovarUpdate (
+	kfase_alt_speed_estimate_s *p_s);
 /*#### |End  | <-- Секция - "Прототипы локальных функций" ####################*/
 
 
@@ -32,24 +74,33 @@ KFASE_Init_KF(
 	float baro_R_Noise,
 	float covar_P_Noise,
 	float alt,
-	float speed)
+	float speed,
+	float dT)
 {
+	/* Инициализация матрицы ковариаций P */
 	KFASE_InitMatrixCovarianseP(
 		p_s,
 		covar_P_Noise);
 
+	/* Инициализация матрицы ковариаций акселерометра */
 	KFASE_InitMatrixCovarianseQ(
 		p_s,
 		acc_Q_Noise);
 
+	/* Инициализация матрицы ковариаций барометра */
 	KFASE_InitMatrixCovarianseR(
 		p_s,
 		baro_R_Noise);
 
+	/* Инициализация высоты и скорости */
 	KFASE_InitStates(
 		p_s,
 		alt,
 		speed);
+	
+	/* Инициализация периода интегрирования показаний акселерометра */
+	p_s->dT = dT;
+	p_s->dTdT = dT * dT;
 }
 
 float
@@ -67,45 +118,20 @@ KFASE_GetVerticalSpeedEstimate(
 }
 
 void
-KFASE_GetPredict (
-	kfase_alt_speed_estimate_s *p_s,
-	float accWorldFrame,
-	float dt)
-{
-	/* Обновление оценки высоты */
-	p_s->states_x_a[KFASE_ESTIMATE_ALT] =
-		((accWorldFrame * dt * dt) * 0.5f)
-		+ p_s->states_x_a[KFASE_ESTIMATE_SPEED] * dt
-		+ p_s->states_x_a[KFASE_ESTIMATE_ALT];
-
-	/* Обновление оценки скорости */
-	p_s->states_x_a[KFASE_ESTIMATE_SPEED] =
-		p_s->states_x_a[KFASE_ESTIMATE_SPEED] + accWorldFrame * dt;
-
-	/* Частичное обновление матрицы ковариаций */
-	KFASE_HalfCovarUpdate(
-		p_s,
-		dt);
-}
-
-void
 KFASE_GetPredictWithCorrect (
 	kfase_alt_speed_estimate_s *p_s,
 	float accWorldFrame,
-	float altBaro,
-	float dt)
+	float altBaro)
 
 {
 	/* Обновление оценки состояний */
 	KFASE_GetPredict (
 		p_s,
-		accWorldFrame,
-		dt);
+		accWorldFrame);
 
 	/* Обновление коэффициентов усиления фильтра Калмана */
 	KFASE_CalcKalmanGain(
-		p_s,
-		dt);
+		p_s);
 
 	/* Обновление оценки с помощью измерений */
 	KFASE_UpdateEstimate(
@@ -170,9 +196,28 @@ KFASE_InitStates(
 }
 
 void
-KFASE_HalfCovarUpdate (
+KFASE_GetPredict (
 	kfase_alt_speed_estimate_s *p_s,
-	float dt)
+	float accWorldFrame)
+{
+	/* Обновление оценки высоты */
+	p_s->states_x_a[KFASE_ESTIMATE_ALT] =
+		((accWorldFrame * p_s->dTdT) * 0.5f)
+		+ p_s->states_x_a[KFASE_ESTIMATE_SPEED] * p_s->dT
+		+ p_s->states_x_a[KFASE_ESTIMATE_ALT];
+
+	/* Обновление оценки скорости */
+	p_s->states_x_a[KFASE_ESTIMATE_SPEED] =
+		p_s->states_x_a[KFASE_ESTIMATE_SPEED] + accWorldFrame * p_s->dT;
+
+	/* Частичное обновление матрицы ковариаций */
+	KFASE_HalfCovarUpdate(
+		p_s);
+}
+
+void
+KFASE_HalfCovarUpdate (
+	kfase_alt_speed_estimate_s *p_s)
 {
 	/* Временная переменная для матрицы ковариаций */
 	float P_temp[2][2] =
@@ -184,18 +229,18 @@ KFASE_HalfCovarUpdate (
 	p_s->covarianse_P_a[0][0] =
 		p_s->accCovarianse_Q_a2[0][0]
 		+ P_temp[0][0]
-		+ dt * (P_temp[0][1] + P_temp[1][1] * dt)
-		+ P_temp[1][0] * dt;
+		+ p_s->dT * (P_temp[0][1] + P_temp[1][1] * p_s->dT)
+		+ P_temp[1][0] * p_s->dT;
 
 	p_s->covarianse_P_a[0][1] =
 		p_s->accCovarianse_Q_a2[0][1]
 		+ P_temp[0][1]
-		+ P_temp[1][1] * dt;
+		+ P_temp[1][1] * p_s->dT;
 
 	p_s->covarianse_P_a[1][0] =
 		p_s->accCovarianse_Q_a2[1][0]
 		+ P_temp[1][0]
-		+ P_temp[1][1] * dt;
+		+ P_temp[1][1] * p_s->dT;
 
 	p_s->covarianse_P_a[1][1] =
 		p_s->accCovarianse_Q_a2[1][1]
@@ -204,11 +249,10 @@ KFASE_HalfCovarUpdate (
 
 void
 KFASE_CalcKalmanGain (
-	kfase_alt_speed_estimate_s *p_s,
-	float dt)
+	kfase_alt_speed_estimate_s *p_s)
 {
 	p_s->kalmanGain_K_a[KFASE_KALMAN_GAIN_ALT] =
-		(p_s->covarianse_P_a[0][0] + p_s->covarianse_P_a[1][0] * dt) / p_s->covarianse_P_a[0][0];
+		(p_s->covarianse_P_a[0][0] + p_s->covarianse_P_a[1][0] * p_s->dT) / p_s->covarianse_P_a[0][0];
 //		+ 1.0f;
 
 	p_s->kalmanGain_K_a[KFASE_KALMAN_GAIN_SPEED] =
