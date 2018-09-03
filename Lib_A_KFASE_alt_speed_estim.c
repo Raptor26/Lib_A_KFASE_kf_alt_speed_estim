@@ -70,9 +70,9 @@ KFASE_FullCovarUpdate (
 
 /**
  * @brief	Функция выполняет инициализацию фильтра Калмана
- * @details	Функция инициализирует все необходимые параметры для начала 
+ * @details	Функция инициализирует все необходимые параметры для начала
  *          работы фильтра Калмана
- * @param[in]	*p_s:	Указатель на структуру, содержащую необходимые данные 
+ * @param[in]	*p_s:	Указатель на структуру, содержащую необходимые данные
  * 						для работы фильтра Калмана
  * @param[in]	acc_Q_Noise:	Шумовая характеристика акселерометра
  * @param[in]	baro_R_Noise:	Шумовая характеристика барометра
@@ -84,12 +84,12 @@ KFASE_FullCovarUpdate (
 void
 KFASE_Init_KF(
 	kfase_alt_speed_estimate_s *p_s,
-	float acc_Q_Noise,
-	float baro_R_Noise,
-	float covar_P_Noise,
-	float alt,
-	float speed,
-	float dT)
+	__KFASE_FLOAT_POINT_TYPE__ acc_Q_Noise,
+	__KFASE_FLOAT_POINT_TYPE__ baro_R_Noise,
+	__KFASE_FLOAT_POINT_TYPE__ covar_P_Noise,
+	__KFASE_FLOAT_POINT_TYPE__ alt,
+	__KFASE_FLOAT_POINT_TYPE__ speed,
+	__KFASE_FLOAT_POINT_TYPE__ dT)
 {
 	/* Инициализация матрицы ковариаций P */
 	KFASE_InitMatrixCovarianseP(
@@ -119,7 +119,7 @@ KFASE_Init_KF(
 
 /**
  * @brief	Функция возвращает оцененную фильтром Калмана высоту
- * @param[in]	p_s:	Указатель на структуру, содержащую необходимые данные 
+ * @param[in]	p_s:	Указатель на структуру, содержащую необходимые данные
  * 						для работы фильтра Калмана
  * @return	Оцененная фильтром Калмана высота
  */
@@ -132,7 +132,7 @@ KFASE_GetAltEstimate(
 
 /**
  * @brief	Функция возвращает оцененную фильтром Калмана вертикальную скорость
- * @param[in]	p_s:	Указатель на структуру, содержащую необходимые данные 
+ * @param[in]	p_s:	Указатель на структуру, содержащую необходимые данные
  * 						для работы фильтра Калмана
  * @return	Оцененная фильтром Калмана вертикальная скорость
  */
@@ -144,11 +144,11 @@ KFASE_GetVerticalSpeedEstimate(
 }
 
 /**
- * @brief	Функция выполняет обновление оценки высоты и вертикальной 
+ * @brief	Функция выполняет обновление оценки высоты и вертикальной
  *        	скорости с помощью фильтра Калмана
- * @param[in]	p_s:	Указатель на структуру, содержащую необходимые данные 
+ * @param[in]	p_s:	Указатель на структуру, содержащую необходимые данные
  * 						для работы фильтра Калмана
- * @param[in]	accWorldFrame:	Показания акселерометра в опорной системе 
+ * @param[in]	accWorldFrame:	Показания акселерометра в опорной системе
  * 								координат вдоль вертикальной оси
  * @param[in]	altBaro:	Показания барометрического датчика
  * @return	None
@@ -156,8 +156,8 @@ KFASE_GetVerticalSpeedEstimate(
 void
 KFASE_GetPredictWithCorrect (
 	kfase_alt_speed_estimate_s *p_s,
-	float accWorldFrame,
-	float altBaro)
+	__KFASE_FLOAT_POINT_TYPE__ accWorldFrame,
+	__KFASE_FLOAT_POINT_TYPE__ altBaro)
 
 {
 	/* Обновление оценки состояний */
@@ -185,7 +185,7 @@ KFASE_GetPredictWithCorrect (
 void
 KFASE_InitMatrixCovarianseP (
 	kfase_alt_speed_estimate_s *p_s,
-	float eye)
+	__KFASE_FLOAT_POINT_TYPE__ eye)
 {
 	/* Инициализация матрицы ковариаций как диагональную */
 	p_s->covarianse_P_a[0][0] = eye;
@@ -197,7 +197,7 @@ KFASE_InitMatrixCovarianseP (
 void
 KFASE_InitMatrixCovarianseQ(
 	kfase_alt_speed_estimate_s *p_s,
-	float eye)
+	__KFASE_FLOAT_POINT_TYPE__ eye)
 {
 	/* Инициализация матрицы ковариаций как диагональную */
 	p_s->accCovarianse_Q_a2[0][0] = eye;
@@ -209,7 +209,7 @@ KFASE_InitMatrixCovarianseQ(
 void
 KFASE_InitMatrixCovarianseR(
 	kfase_alt_speed_estimate_s *p_s,
-	float eye)
+	__KFASE_FLOAT_POINT_TYPE__ eye)
 {
 	/* Инициализация матрицы ковариаций как диагональную */
 	p_s->baroCovarianse_R_a2[0][0] = eye;
@@ -221,8 +221,8 @@ KFASE_InitMatrixCovarianseR(
 void
 KFASE_InitStates(
 	kfase_alt_speed_estimate_s *p_s,
-	float alt,
-	float speed)
+	__KFASE_FLOAT_POINT_TYPE__ alt,
+	__KFASE_FLOAT_POINT_TYPE__ speed)
 {
 	p_s->states_x_a[KFASE_ESTIMATE_ALT] 	= alt;
 	p_s->states_x_a[KFASE_ESTIMATE_SPEED] 	= speed;
@@ -231,7 +231,7 @@ KFASE_InitStates(
 void
 KFASE_GetPredict (
 	kfase_alt_speed_estimate_s *p_s,
-	float accWorldFrame)
+	__KFASE_FLOAT_POINT_TYPE__ accWorldFrame)
 {
 	/* Обновление оценки высоты */
 	p_s->states_x_a[KFASE_ESTIMATE_ALT] =
@@ -253,7 +253,7 @@ KFASE_HalfCovarUpdate (
 	kfase_alt_speed_estimate_s *p_s)
 {
 	/* Временная переменная для матрицы ковариаций */
-	float P_temp[2][2] =
+	__KFASE_FLOAT_POINT_TYPE__ P_temp[2][2] =
 	{
 		{p_s->covarianse_P_a[0][0], p_s->covarianse_P_a[0][1]},
 		{p_s->covarianse_P_a[1][0], p_s->covarianse_P_a[1][1]}
@@ -295,7 +295,7 @@ KFASE_CalcKalmanGain (
 void
 KFASE_UpdateEstimate (
 	kfase_alt_speed_estimate_s *p_s,
-	float altBaro)
+	__KFASE_FLOAT_POINT_TYPE__ altBaro)
 {
 	p_s->states_x_a[KFASE_ESTIMATE_ALT] =
 		p_s->states_x_a[KFASE_ESTIMATE_ALT]
@@ -313,7 +313,7 @@ KFASE_FullCovarUpdate (
 	/* TODO избавиться от временных переменных матрицы ковариаций
 	 * (после того как будет проверена работоспособность фильтра) */
 	/* Временная переменная для матрицы ковариаций */
-	float P_temp[2][2] =
+	__KFASE_FLOAT_POINT_TYPE__ P_temp[2][2] =
 	{
 		{p_s->covarianse_P_a[0][0], p_s->covarianse_P_a[0][1]},
 		{p_s->covarianse_P_a[1][0], p_s->covarianse_P_a[1][1]}

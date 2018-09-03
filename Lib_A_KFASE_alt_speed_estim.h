@@ -24,6 +24,9 @@
 
 
 /*#### |Begin| --> Секция - "Определение констант" ###########################*/
+#if !defined (__KFASE_FLOAT_POINT_TYPE__)
+#error "Please, define veriable __KFASE_FLOAT_POINT_TYPE__ "
+#endif
 enum
 {
 	KFASE_KALMAN_GAIN_ALT = 0,
@@ -42,20 +45,20 @@ enum
 typedef struct
 {
 	/* Пространство состояний системы, а именно высота и вертикальная скорость */
-	float states_x_a[2];
+	__KFASE_FLOAT_POINT_TYPE__ states_x_a[2];
 
 	/* Период интегрирования показаний акселерометра (сек) */
-	float dT;
+	__KFASE_FLOAT_POINT_TYPE__ dT;
 
 	/* Квадрат периода интегрирования показаний акселерометра (сек) */
-	float dTdT;
+	__KFASE_FLOAT_POINT_TYPE__ dTdT;
 
-	float accCovarianse_Q_a2[2][2],
+	__KFASE_FLOAT_POINT_TYPE__ accCovarianse_Q_a2[2][2],
 		  baroCovarianse_R_a2[2][2];
 
-	float covarianse_P_a[2][2];
+	__KFASE_FLOAT_POINT_TYPE__ covarianse_P_a[2][2];
 
-	float kalmanGain_K_a[2];
+	__KFASE_FLOAT_POINT_TYPE__ kalmanGain_K_a[2];
 } kfase_alt_speed_estimate_s;
 /*#### |End  | <-- Секция - "Определение типов" ##############################*/
 
@@ -68,18 +71,18 @@ typedef struct
 extern void
 KFASE_Init_KF(
 	kfase_alt_speed_estimate_s *p_s,
-	float acc_Q_Noise,
-	float baro_R_Noise,
-	float covar_P_Noise,
-	float alt,
-	float speed,
-	float dT);
+	__KFASE_FLOAT_POINT_TYPE__ acc_Q_Noise,
+	__KFASE_FLOAT_POINT_TYPE__ baro_R_Noise,
+	__KFASE_FLOAT_POINT_TYPE__ covar_P_Noise,
+	__KFASE_FLOAT_POINT_TYPE__ alt,
+	__KFASE_FLOAT_POINT_TYPE__ speed,
+	__KFASE_FLOAT_POINT_TYPE__ dT);
 
 extern void
 KFASE_GetPredictWithCorrect(
 	kfase_alt_speed_estimate_s *p_s,
-	float accWorldFrame,
-	float altBaro);
+	__KFASE_FLOAT_POINT_TYPE__ accWorldFrame,
+	__KFASE_FLOAT_POINT_TYPE__ altBaro);
 
 extern float
 KFASE_GetAltEstimate(
