@@ -18,15 +18,15 @@ Lib_A_KFASE_alt_speed_estim
 	/* Инициализация фильтра Калмана начальными значениями */
 	KFASE_Init_KF
 	(
-		&altSpeedEstim_KF_s,	// Указатель на структуру
-		(float) acc_Q_Noise,	// Шумовая характеристика акселерометра ()
-		(float) baro_R_Noise,	// Шумовая характристика барометра
-		(float) covar_P_Noise,	// Значение, которым будет проинициализирована 
-								// диагональ матрицы ковариаций
-		(float) alt,			// Начальное значение высоты
-		(float) speed,			// Начальное значение векртикальной скорости
-		(float) dT,				// Период интегрирования показаний акселерометра 
-								// для обновления высоты и вертикальной скорости
+		&altSpeedEstim_KF_s,						// Указатель на структуру
+		(__KFASE_FLOAT_POINT_TYPE__) acc_Q_Noise,	// Шумовая характеристика акселерометра ()
+		(__KFASE_FLOAT_POINT_TYPE__) baro_R_Noise,	// Шумовая характристика барометра
+		(__KFASE_FLOAT_POINT_TYPE__) covar_P_Noise,	// Значение, которым будет проинициализирована 
+													// диагональ матрицы ковариаций
+		(__KFASE_FLOAT_POINT_TYPE__) alt,			// Начальное значение высоты
+		(__KFASE_FLOAT_POINT_TYPE__) speed,			// Начальное значение векртикальной скорости
+		(__KFASE_FLOAT_POINT_TYPE__) dT,			// Период интегрирования показаний акселерометра 
+													// для обновления высоты и вертикальной скорости
 	)
 	...
 		while(1)
@@ -51,14 +51,14 @@ Lib_A_KFASE_alt_speed_estim
 			...
 			/* Получить оценку высоты */
 			float altEstim = 
-					KFASE_GetAltEstimate(
-						&altSpeedEstim_KF_s);
+				(float) KFASE_GetAltEstimate(
+					&altSpeedEstim_KF_s);
 			...
 			/* Получить оценку вертикальной скорости */
 			float verticalSpeedEstim = 
-					KFASE_GetVerticalSpeedEstimate(
-						&altSpeedEstim_KF_s);
+				(float) KFASE_GetVerticalSpeedEstimate(
+					&altSpeedEstim_KF_s);
 			...
 		}
-	
+		return 0;
 	}
