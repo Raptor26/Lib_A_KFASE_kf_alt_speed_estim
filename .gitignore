@@ -13,6 +13,7 @@
 !*.pdf
 !*.mcdx
 !*.m
+!*.html
 
 !.gitignore
 
