@@ -43,25 +43,20 @@ KFASE_InitStates(
 	float speed);
 
 static void
-KFASE_GetPredict (
-	kfase_alt_speed_estimate_s *p_s,
-	float accWorldFrame);
-
-static void
-KFASE_HalfCovarUpdate (
+KFASE_HalfCovarUpdate(
 	kfase_alt_speed_estimate_s *p_s);
 
 static void
-KFASE_CalcKalmanGain (
+KFASE_CalcKalmanGain(
 	kfase_alt_speed_estimate_s *p_s);
 
 static void
-KFASE_UpdateEstimate (
+KFASE_UpdateEstimate(
 	kfase_alt_speed_estimate_s *p_s,
 	float altBaro);
 
 static void
-KFASE_FullCovarUpdate (
+KFASE_FullCovarUpdate(
 	kfase_alt_speed_estimate_s *p_s);
 /*#### |End  | <-- Секция - "Прототипы локальных функций" ####################*/
 
@@ -111,7 +106,7 @@ KFASE_Init_KF(
 		p_s,
 		alt,
 		speed);
-	
+
 	/* Инициализация периода интегрирования показаний акселерометра */
 	p_s->dT = dT;
 	p_s->dTdT = dT * dT;
@@ -144,6 +139,35 @@ KFASE_GetVerticalSpeedEstimate(
 }
 
 /**
+ * @brief	Функция выполняет оценку высоты и вертикальной скорости
+ *        	с помощью фильтра Калмана без коррекции по показаниям барометра
+ * @param[in]	p_s:	Указатель на структуру, содержащую необходимые данные
+ * 						для работы фильтра Калмана
+ * @param[in]	accWorldFrame:	Показания акселерометра в опорной системе
+ * 								координат вдоль вертикальной оси
+ * @return	None
+ */
+void
+KFASE_GetPredict(
+	kfase_alt_speed_estimate_s *p_s,
+	__KFASE_FLOAT_POINT_TYPE__ accWorldFrame)
+{
+	/* Обновление оценки высоты */
+	p_s->states_x_a[KFASE_ESTIMATE_ALT] =
+		((accWorldFrame * p_s->dTdT) * 0.5f)
+		+ p_s->states_x_a[KFASE_ESTIMATE_SPEED] * p_s->dT
+		+ p_s->states_x_a[KFASE_ESTIMATE_ALT];
+
+	/* Обновление оценки скорости */
+	p_s->states_x_a[KFASE_ESTIMATE_SPEED] =
+		p_s->states_x_a[KFASE_ESTIMATE_SPEED] + accWorldFrame * p_s->dT;
+
+	/* Частичное обновление матрицы ковариаций */
+	KFASE_HalfCovarUpdate(
+		p_s);
+}
+
+/**
  * @brief	Функция выполняет обновление оценки высоты и вертикальной
  *        	скорости с помощью фильтра Калмана
  * @param[in]	p_s:	Указатель на структуру, содержащую необходимые данные
@@ -154,14 +178,14 @@ KFASE_GetVerticalSpeedEstimate(
  * @return	None
  */
 void
-KFASE_GetPredictWithCorrect (
+KFASE_GetPredictWithCorrect(
 	kfase_alt_speed_estimate_s *p_s,
 	__KFASE_FLOAT_POINT_TYPE__ accWorldFrame,
 	__KFASE_FLOAT_POINT_TYPE__ altBaro)
 
 {
 	/* Обновление оценки состояний */
-	KFASE_GetPredict (
+	KFASE_GetPredict(
 		p_s,
 		accWorldFrame);
 
@@ -229,27 +253,7 @@ KFASE_InitStates(
 }
 
 void
-KFASE_GetPredict (
-	kfase_alt_speed_estimate_s *p_s,
-	__KFASE_FLOAT_POINT_TYPE__ accWorldFrame)
-{
-	/* Обновление оценки высоты */
-	p_s->states_x_a[KFASE_ESTIMATE_ALT] =
-		((accWorldFrame * p_s->dTdT) * 0.5f)
-		+ p_s->states_x_a[KFASE_ESTIMATE_SPEED] * p_s->dT
-		+ p_s->states_x_a[KFASE_ESTIMATE_ALT];
-
-	/* Обновление оценки скорости */
-	p_s->states_x_a[KFASE_ESTIMATE_SPEED] =
-		p_s->states_x_a[KFASE_ESTIMATE_SPEED] + accWorldFrame * p_s->dT;
-
-	/* Частичное обновление матрицы ковариаций */
-	KFASE_HalfCovarUpdate(
-		p_s);
-}
-
-void
-KFASE_HalfCovarUpdate (
+KFASE_HalfCovarUpdate(
 	kfase_alt_speed_estimate_s *p_s)
 {
 	/* Временная переменная для матрицы ковариаций */
@@ -281,7 +285,7 @@ KFASE_HalfCovarUpdate (
 }
 
 void
-KFASE_CalcKalmanGain (
+KFASE_CalcKalmanGain(
 	kfase_alt_speed_estimate_s *p_s)
 {
 	p_s->kalmanGain_K_a[KFASE_KALMAN_GAIN_ALT] =
@@ -293,7 +297,7 @@ KFASE_CalcKalmanGain (
 }
 
 void
-KFASE_UpdateEstimate (
+KFASE_UpdateEstimate(
 	kfase_alt_speed_estimate_s *p_s,
 	__KFASE_FLOAT_POINT_TYPE__ altBaro)
 {
@@ -307,7 +311,7 @@ KFASE_UpdateEstimate (
 }
 
 void
-KFASE_FullCovarUpdate (
+KFASE_FullCovarUpdate(
 	kfase_alt_speed_estimate_s *p_s)
 {
 	/* TODO избавиться от временных переменных матрицы ковариаций

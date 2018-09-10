@@ -25,7 +25,7 @@
 
 /*#### |Begin| --> Секция - "Определение констант" ###########################*/
 #if !defined (__KFASE_FLOAT_POINT_TYPE__)
-#error "Please, define veriable __KFASE_FLOAT_POINT_TYPE__ "
+#error "Please, define  __KFASE_FLOAT_POINT_TYPE__ (set float or double)"
 #endif
 enum
 {
@@ -54,7 +54,7 @@ typedef struct
 	__KFASE_FLOAT_POINT_TYPE__ dTdT;
 
 	__KFASE_FLOAT_POINT_TYPE__ accCovarianse_Q_a2[2][2],
-		  baroCovarianse_R_a2[2][2];
+							   baroCovarianse_R_a2[2][2];
 
 	__KFASE_FLOAT_POINT_TYPE__ covarianse_P_a[2][2];
 
@@ -77,6 +77,11 @@ KFASE_Init_KF(
 	__KFASE_FLOAT_POINT_TYPE__ alt,
 	__KFASE_FLOAT_POINT_TYPE__ speed,
 	__KFASE_FLOAT_POINT_TYPE__ dT);
+
+extern void
+KFASE_GetPredict(
+	kfase_alt_speed_estimate_s *p_s,
+	__KFASE_FLOAT_POINT_TYPE__ accWorldFrame);
 
 extern void
 KFASE_GetPredictWithCorrect(
