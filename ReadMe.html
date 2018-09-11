@@ -1096,26 +1096,32 @@ body .markdown-body
         <span class="cm">/* Если готовы только показания акселерометра и не готовы показания барометра */</span>
         <span class="k">if</span> <span class="p">((</span><span class="n">accMeasureReady_flag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">baroMeasureReady_flag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span>
         <span class="p">{</span>
-            <span class="n">KFASE_GetPredict</span><span class="p">(</span>
+            <span class="n">KFASE_GetPredict</span>
+            <span class="p">(</span>
                 <span class="o">&amp;</span><span class="n">altSpeedEstim_KF_s</span><span class="p">,</span> 
-                <span class="n">verticalAcceleration</span><span class="p">);</span>
+                <span class="n">verticalAcceleration</span>    <span class="c1">// Вертикальное ускорения должно </span>
+                                        <span class="c1">// быть выражено в м/сек^2</span>
+            <span class="p">);</span>
         <span class="p">}</span>
 
         <span class="cm">/* Если готовы и показания акселерометра и показания барометра */</span>
         <span class="k">else</span> <span class="k">if</span> <span class="p">((</span><span class="n">accMeasureReady_flag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">baroMeasureReady_flag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span>
         <span class="p">{</span>
-            <span class="n">KFASE_GetPredictWithCorrect</span><span class="p">(</span>
+            <span class="n">KFASE_GetPredictWithCorrect</span>
+            <span class="p">(</span>
                 <span class="o">&amp;</span><span class="n">altSpeedEstim_KF_s</span><span class="p">,</span> 
-                <span class="n">verticalAcceleration</span><span class="p">,</span> 
-                <span class="n">baroAltMeasure</span><span class="p">);</span>
+                <span class="n">verticalAcceleration</span><span class="p">,</span>   <span class="c1">// Вертикальное ускорения должно </span>
+                                        <span class="c1">// быть выражено в м/сек^2</span>
+                <span class="n">baroAltMeasure</span>          <span class="c1">// Высота должна быть выражена в метрах</span>
+            <span class="p">);</span>
         <span class="p">}</span>
         <span class="p">...</span>
-        <span class="cm">/* Получить оценку высоты */</span>
+        <span class="cm">/* Получить оценку высоты в метрах */</span>
         <span class="kt">float</span> <span class="n">altEstim</span> <span class="o">=</span> 
             <span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="n">KFASE_GetAltEstimate</span><span class="p">(</span>
                 <span class="o">&amp;</span><span class="n">altSpeedEstim_KF_s</span><span class="p">);</span>
         <span class="p">...</span>
-        <span class="cm">/* Получить оценку вертикальной скорости */</span>
+        <span class="cm">/* Получить оценку вертикальной скорости в м/сек */</span>
         <span class="kt">float</span> <span class="n">verticalSpeedEstim</span> <span class="o">=</span> 
             <span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="n">KFASE_GetVerticalSpeedEstimate</span><span class="p">(</span>
                 <span class="o">&amp;</span><span class="n">altSpeedEstim_KF_s</span><span class="p">);</span>

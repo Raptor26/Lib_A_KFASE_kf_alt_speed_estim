@@ -45,26 +45,32 @@ int main(void)
 		/* Если готовы только показания акселерометра и не готовы показания барометра */
 		if ((accMeasureReady_flag == 1) && (baroMeasureReady_flag == 0))
 		{
-			KFASE_GetPredict(
+			KFASE_GetPredict
+			(
 				&altSpeedEstim_KF_s, 
-				verticalAcceleration);
+				verticalAcceleration	// Вертикальное ускорения должно 
+										// быть выражено в м/сек^2
+			);
 		}
 
 		/* Если готовы и показания акселерометра и показания барометра */
 		else if ((accMeasureReady_flag == 1) && (baroMeasureReady_flag == 1))
 		{
-			KFASE_GetPredictWithCorrect(
+			KFASE_GetPredictWithCorrect
+			(
 				&altSpeedEstim_KF_s, 
-				verticalAcceleration, 
-				baroAltMeasure);
+				verticalAcceleration, 	// Вертикальное ускорения должно 
+										// быть выражено в м/сек^2
+				baroAltMeasure			// Высота должна быть выражена в метрах
+			);
 		}
 		...
-		/* Получить оценку высоты */
+		/* Получить оценку высоты в метрах */
 		float altEstim = 
 			(float) KFASE_GetAltEstimate(
 				&altSpeedEstim_KF_s);
 		...
-		/* Получить оценку вертикальной скорости */
+		/* Получить оценку вертикальной скорости в м/сек */
 		float verticalSpeedEstim = 
 			(float) KFASE_GetVerticalSpeedEstimate(
 				&altSpeedEstim_KF_s);
