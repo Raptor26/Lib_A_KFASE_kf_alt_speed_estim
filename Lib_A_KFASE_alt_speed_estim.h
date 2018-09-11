@@ -27,6 +27,12 @@
 #if !defined (__KFASE_FLOAT_POINT_TYPE__)
 #error "Please, define  __KFASE_FLOAT_POINT_TYPE__ (set float or double)"
 #endif
+
+#if !defined(KFASE_GRAVITY_ACCELERATION_METERS_PER_SEC_IN_SQUARE)
+#define KFASE_GRAVITY_ACCELERATION_METERS_PER_SEC_IN_SQUARE	\
+		((__KFASE_FLOAT_POINT_TYPE__)9.81)
+#endif
+
 enum
 {
 	KFASE_KALMAN_GAIN_ALT = 0,
